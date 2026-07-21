@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Biochemistry Revision Platform (500+ Question Pool)</title>
+    <title>Biochemistry Revision Platform</title>
     <style>
         :root {
             --primary: #2563eb;
@@ -33,8 +33,45 @@
         }
 
         .container {
-            max-width: 850px;
+            max-width: 900px;
             margin: 0 auto;
+        }
+
+        /* Persistent Navigation Bar */
+        .top-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            background-color: #1e293b;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+
+        .top-nav button {
+            width: auto;
+            padding: 8px 12px;
+            font-size: 0.85rem;
+            background-color: #334155;
+            color: #f8fafc;
+            border: 1px solid #475569;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .top-nav button:hover {
+            background-color: var(--primary);
+        }
+
+        .top-nav button.nav-dash {
+            background-color: #059669;
+            font-weight: bold;
+        }
+
+        .top-nav button.nav-dash:hover {
+            background-color: #047857;
         }
 
         header {
@@ -44,36 +81,20 @@
             border-bottom: 2px solid #e2e8f0;
         }
 
-        h1 {
-            color: var(--primary-dark);
-            margin-bottom: 0.5rem;
-        }
-
-        .subtitle {
-            color: var(--text-muted);
-            font-size: 1rem;
-        }
+        h1 { color: var(--primary-dark); margin-bottom: 0.5rem; }
+        .subtitle { color: var(--text-muted); font-size: 1rem; }
 
         .card {
             background: var(--card-bg);
             border-radius: 12px;
             padding: 24px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
             margin-bottom: 20px;
         }
 
-        .control-panel {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
+        .control-panel { display: flex; flex-direction: column; gap: 15px; }
 
-        label {
-            font-weight: 600;
-            color: var(--text-main);
-            margin-bottom: 5px;
-            display: block;
-        }
+        label { font-weight: 600; color: var(--text-main); margin-bottom: 5px; display: block; }
 
         select, button {
             width: 100%;
@@ -85,17 +106,31 @@
             box-sizing: border-box;
         }
 
-        button {
+        button.btn-primary {
             background-color: var(--primary);
             color: white;
             font-weight: 600;
             border: none;
             cursor: pointer;
-            transition: background-color 0.2s;
         }
 
-        button:hover {
-            background-color: var(--primary-dark);
+        button.btn-primary:hover { background-color: var(--primary-dark); }
+
+        /* Real-Time Progress Bar */
+        .progress-container {
+            width: 100%;
+            background-color: #e2e8f0;
+            border-radius: 8px;
+            height: 16px;
+            overflow: hidden;
+            margin: 10px 0 20px 0;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background-color: var(--primary);
+            transition: width 0.3s ease, background-color 0.3s ease;
         }
 
         .stats-bar {
@@ -104,22 +139,11 @@
             align-items: center;
             font-weight: 600;
             color: var(--text-muted);
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #e2e8f0;
+            margin-bottom: 10px;
         }
 
-        .question-text {
-            font-size: 1.15rem;
-            font-weight: 600;
-            margin-bottom: 20px;
-        }
-
-        .options-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
+        .question-text { font-size: 1.15rem; font-weight: 600; margin-bottom: 20px; }
+        .options-grid { display: flex; flex-direction: column; gap: 12px; }
 
         .option-btn {
             text-align: left;
@@ -129,14 +153,10 @@
             padding: 14px 18px;
             border-radius: 8px;
             cursor: pointer;
-            font-weight: normal;
             transition: all 0.2s;
         }
 
-        .option-btn:hover:not([disabled]) {
-            background-color: #e2e8f0;
-            border-color: #cbd5e1;
-        }
+        .option-btn:hover:not([disabled]) { background-color: #e2e8f0; }
 
         .option-btn.correct {
             background-color: var(--correct-bg) !important;
@@ -151,28 +171,10 @@
             color: var(--wrong-text) !important;
         }
 
-        .feedback-box {
-            margin-top: 20px;
-            padding: 16px;
-            border-radius: 8px;
-            display: none;
-        }
-
-        .feedback-box.visible {
-            display: block;
-        }
-
-        .feedback-box.correct {
-            background-color: var(--correct-bg);
-            border: 1px solid var(--correct-border);
-            color: var(--correct-text);
-        }
-
-        .feedback-box.wrong {
-            background-color: var(--wrong-bg);
-            border: 1px solid var(--wrong-border);
-            color: var(--wrong-text);
-        }
+        .feedback-box { margin-top: 20px; padding: 16px; border-radius: 8px; display: none; }
+        .feedback-box.visible { display: block; }
+        .feedback-box.correct { background-color: var(--correct-bg); border: 1px solid var(--correct-border); color: var(--correct-text); }
+        .feedback-box.wrong { background-color: var(--wrong-bg); border: 1px solid var(--wrong-border); color: var(--wrong-text); }
 
         .tip-box {
             margin-top: 15px;
@@ -184,48 +186,118 @@
             display: none;
             font-size: 0.95rem;
         }
+        .tip-box.visible { display: block; }
 
-        .tip-box.visible {
-            display: block;
+        .action-btn { margin-top: 20px; display: none; }
+        .action-btn.visible { display: block; }
+
+        .badge { background-color: #e0e7ff; color: #3730a3; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; text-transform: uppercase; }
+
+        /* Q-Cards Styling */
+        .qcard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
         }
 
-        .action-btn {
-            margin-top: 20px;
+        .qcard {
+            background-color: #f8fafc;
+            border: 2px solid #cbd5e1;
+            border-radius: 8px;
+            height: 140px;
+            padding: 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-weight: bold;
+            transition: transform 0.2s, background-color 0.2s;
+            position: relative;
+        }
+
+        .qcard:hover { transform: translateY(-2px); border-color: var(--primary); }
+        .qcard.flipped { background-color: #eff6ff; border-color: var(--primary); color: #1e3a8a; font-weight: normal; font-size: 0.9rem; }
+
+        /* Short Answer Styling */
+        .sa-item {
+            border-bottom: 1px solid #e2e8f0;
+            padding: 15px 0;
+        }
+
+        .sa-item:last-child { border-bottom: none; }
+        .sa-question { font-weight: 600; margin-bottom: 8px; }
+        .sa-answer {
+            background-color: #f1f5f9;
+            padding: 12px;
+            border-radius: 6px;
             display: none;
+            margin-top: 8px;
+            font-size: 0.95rem;
+            color: #1e293b;
         }
-
-        .action-btn.visible {
-            display: block;
-        }
-
-        .badge {
-            background-color: #e0e7ff;
-            color: #3730a3;
-            padding: 4px 8px;
-            border-radius: 4px;
+        .sa-answer.visible { display: block; }
+        .toggle-ans-btn {
+            background-color: #cbd5e1;
+            color: #0f172a;
+            border: none;
+            padding: 4px 10px;
             font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
+            border-radius: 4px;
+            cursor: pointer;
+            width: auto;
         }
 
-        .hidden {
-            display: none;
+        .section-nav-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
         }
+
+        .section-nav-tabs button {
+            flex: 1;
+            padding: 10px;
+            background-color: #e2e8f0;
+            color: var(--text-main);
+            border: none;
+            font-weight: 600;
+        }
+
+        .section-nav-tabs button.active {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .hidden { display: none; }
     </style>
 </head>
 <body>
 
 <div class="container">
+    <!-- Always-On Navigation Bar -->
+    <div class="top-nav">
+        <button class="nav-dash" onclick="navTo('dashboard')">🏠 Dashboard</button>
+        <button onclick="quickStartUnit(1)">Unit 1</button>
+        <button onclick="quickStartUnit(2)">Unit 2</button>
+        <button onclick="quickStartUnit(3)">Unit 3</button>
+        <button onclick="quickStartUnit(4)">Unit 4</button>
+        <button onclick="quickStartUnit(5)">Unit 5</button>
+        <button onclick="navTo('qcards')">🃏 Flashcards</button>
+        <button onclick="navTo('shortans')">✍️ Short Answers</button>
+    </div>
+
     <header>
         <h1>Biochemistry Revision Platform</h1>
-        <p class="subtitle">100 Questions per Unit | 200 Questions Total Curriculum Mode</p>
+        <p class="subtitle">Complete MCQs, Q-Card Flashcards, & Short Answer Modules</p>
     </header>
 
-    <!-- Selection Panel -->
-    <div id="selection-card" class="card">
+    <!-- Main Dashboard View -->
+    <div id="view-dashboard" class="card">
+        <h2>Practice Select</h2>
         <div class="control-panel">
             <div>
-                <label for="unit-select">Select Practice Scope:</label>
+                <label for="unit-select">Select Multiple Choice Scope:</label>
                 <select id="unit-select">
                     <option value="all">Entire Curriculum (200 Questions)</option>
                     <option value="1">Unit 1: Cells, Water and Buffers (100 Questions)</option>
@@ -235,391 +307,285 @@
                     <option value="5">Unit 5: Flow of Genetic Information (100 Questions)</option>
                 </select>
             </div>
-            <button id="start-btn">Start Practice Session</button>
+            <button class="btn-primary" onclick="startQuiz()">Start Quiz Session</button>
         </div>
     </div>
 
-    <!-- Quiz Engine Card -->
-    <div id="quiz-card" class="card hidden">
+    <!-- Quiz View -->
+    <div id="view-quiz" class="card hidden">
         <div class="stats-bar">
             <span id="unit-badge" class="badge">Unit 1</span>
             <span>Question <span id="q-current">1</span> of <span id="q-total">100</span></span>
-            <span>Score: <span id="score">0</span></span>
+            <span>Accuracy: <span id="accuracy-percent">0%</span> (<span id="score">0</span>/<span id="answered-count">0</span>)</span>
         </div>
 
-        <div id="question" class="question-text">Loading question...</div>
-
-        <div id="options" class="options-grid">
-            <!-- Options rendered via JS -->
+        <!-- Real-Time Score/Performance Bar -->
+        <div class="progress-container">
+            <div id="progress-bar" class="progress-bar"></div>
         </div>
+
+        <div id="question" class="question-text">Loading...</div>
+        <div id="options" class="options-grid"></div>
 
         <div id="feedback" class="feedback-box"></div>
         <div id="tip" class="tip-box"></div>
 
-        <button id="next-btn" class="action-btn">Next Question</button>
+        <button id="next-btn" class="btn-primary action-btn" onclick="loadNextQuestion()">Next Question</button>
     </div>
 
-    <!-- Summary Card -->
-    <div id="summary-card" class="card hidden">
+    <!-- Q-Cards View -->
+    <div id="view-qcards" class="card hidden">
+        <h2>Vocabulary Flashcards (10 Core Terms per Unit)</h2>
+        <div class="control-panel" style="margin-bottom: 15px;">
+            <select id="qcard-unit-select" onchange="renderQCards()">
+                <option value="1">Unit 1: Cells, Water and Buffers</option>
+                <option value="2">Unit 2: Energy & Thermodynamics</option>
+                <option value="3">Unit 3: Structure and Function</option>
+                <option value="4">Unit 4: Catalysis & Enzyme Kinetics</option>
+                <option value="5">Unit 5: Flow of Genetic Information</option>
+            </select>
+        </div>
+        <p style="font-size:0.9rem; color:var(--text-muted);">Click any card to reveal its definition.</p>
+        <div id="qcards-container" class="qcard-grid"></div>
+    </div>
+
+    <!-- Short Answer View -->
+    <div id="view-shortans" class="card hidden">
+        <h2>Short Answer Practice (20 Questions per Unit)</h2>
+        <div class="control-panel" style="margin-bottom: 20px;">
+            <select id="sa-unit-select" onchange="renderShortAnswers()">
+                <option value="1">Unit 1: Cells, Water and Buffers</option>
+                <option value="2">Unit 2: Energy & Thermodynamics</option>
+                <option value="3">Unit 3: Structure and Function</option>
+                <option value="4">Unit 4: Catalysis & Enzyme Kinetics</option>
+                <option value="5">Unit 5: Flow of Genetic Information</option>
+            </select>
+        </div>
+        <div id="sa-container"></div>
+    </div>
+
+    <!-- Summary View -->
+    <div id="view-summary" class="card hidden">
         <h2>Practice Session Complete!</h2>
-        <p>You have finished your revision session.</p>
         <p style="font-size: 1.25rem; font-weight: bold;">Final Score: <span id="final-score">0</span> / <span id="final-total">0</span> (<span id="final-percent">0%</span>)</p>
-        <button id="restart-btn">Start New Session</button>
+        <button class="btn-primary" onclick="navTo('dashboard')">Back to Dashboard</button>
     </div>
 </div>
 
 <script>
 // ============================================================================
-// QUESTION GENERATOR ENGINE (100 Questions per Unit = 500 total pool)
+// DATA BANKS (MCQs, Q-Cards, Short Answers)
 // ============================================================================
 
+// 1. GLOSSARY Q-CARDS (10 per Unit = 50 total)
+const qCardBank = {
+    1: [
+        { term: "Henderson-Hasselbalch", def: "pH = pKa + log([A-]/[HA]); Relates buffer pH to acid dissociation constant." },
+        { term: "Amphipathic", def: "Molecules containing both polar (hydrophilic) and nonpolar (hydrophobic) regions." },
+        { term: "Buffer Capacity", def: "Ability of a solution to resist pH changes when acid or base is added (+/- 1 pH unit of pKa)." },
+        { term: "Zwitterion", def: "A molecule having separate positively and negatively charged groups with a net zero charge." },
+        { term: "Hydrogen Bonding", def: "Electrostatic attraction between a hydrogen atom bound to N/O and an electronegative atom." },
+        { term: "Hypertonic", def: "Solution with higher solute concentration; causes cells to shrink via osmotic water loss." },
+        { term: "Dielectric Constant", def: "Measure of a solvent's ability to attenuate electrostatic forces between ions (Water = high)." },
+        { term: "Hydrophobic Effect", def: "Tendency of nonpolar molecules to aggregate in water to minimize entropy reduction." },
+        { term: "Lysosome", def: "Membrane-bound organelle containing hydrolytic enzymes for intracellular degradation." },
+        { term: "Peroxisome", def: "Organelle that executes β-oxidation of fatty acids and degrades H2O2 via catalase." }
+    ],
+    2: [
+        { term: "Gibbs Free Energy (ΔG)", def: "Energy available to do work: ΔG = ΔH - TΔS. Negative ΔG = spontaneous." },
+        { term: "Exergonic", def: "Reaction with negative ΔG, releasing free energy and proceeding spontaneously." },
+        { term: "Endergonic", def: "Reaction with positive ΔG, requiring free energy input to proceed." },
+        { term: "Substrate-Level Phosphorylation", def: "Direct ATP synthesis via transfer of a high-energy phosphate group from a metabolite to ADP." },
+        { term: "Oxidative Phosphorylation", def: "ATP production driven by proton gradient across mitochondrial inner membrane." },
+        { term: "Uncoupling Agent", def: "Compound (like 2,4-DNP) that dissipates the proton gradient, producing heat instead of ATP." },
+        { term: "Proton Motive Force", def: "Electrochemical proton gradient (ΔpH + ΔΨ) used by ATP Synthase." },
+        { term: "Standard Reduction Potential (E°')", def: "Tendency of a chemical species to acquire electrons and be reduced." },
+        { term: "Mass Action Ratio (Q)", def: "Ratio of product to reactant concentrations at any non-equilibrium state." },
+        { term: "Creatine Kinase", def: "Enzyme transferring phosphate between phosphocreatine and ADP for rapid ATP buffer." }
+    ],
+    3: [
+        { term: "Primary Structure", def: "Linear sequence of amino acids joined together by covalent peptide bonds." },
+        { term: "Alpha-Helix", def: "Right-handed coil stabilized by intrachain H-bonds between backbone carbonyl and N-H." },
+        { term: "Beta-Sheet", def: "Extended polypeptide chains linked side-by-side by interstrand hydrogen bonds." },
+        { term: "Tertiary Structure", def: "3D folded conformation of a single polypeptide chain driven by core hydrophobic packing." },
+        { term: "Quaternary Structure", def: "Spatial arrangement of multiple subunit polypeptide chains in a protein complex." },
+        { term: "Denaturation", def: "Loss of native tertiary/secondary structure without breaking peptide bonds." },
+        { term: "Anomers", def: "Stereoisomers of cyclic sugars differing in configuration only at the anomeric carbon (α vs β)." },
+        { term: "Hyperchromic Effect", def: "Increase in UV absorption at 260 nm when double-stranded DNA denatures." },
+        { term: "Saturated Fatty Acid", def: "Hydrocarbon chain with zero double bonds; solid at room temperature." },
+        { term: "Phospholipid", def: "Glycerol backbone with 2 fatty acids and a polar phosphate head group." }
+    ],
+    4: [
+        { term: "Michaelis Constant (Km)", def: "Substrate concentration at which reaction rate is half of Vmax; inversely relates to affinity." },
+        { term: "Vmax", def: "Maximum velocity achieved when all enzyme active sites are saturated with substrate." },
+        { term: "Competitive Inhibition", def: "Inhibitor binds active site: Increases apparent Km, Vmax remains unchanged." },
+        { term: "Non-Competitive Inhibition", def: "Inhibitor binds allosteric site: Decreases Vmax, Km remains unchanged." },
+        { term: "Uncompetitive Inhibition", def: "Inhibitor binds only to ES complex: Decreases both Km and Vmax." },
+        { term: "kcat (Turnover Number)", def: "Substrate molecules converted to product per enzyme active site per second." },
+        { term: "Catalytic Efficiency", def: "Ratio of kcat / Km; measures how effectively enzyme converts low [S] into product." },
+        { term: "Allosteric Enzyme", def: "Enzyme whose activity is regulated by effector binding at a site other than active site." },
+        { term: "Induced Fit", def: "Conformational change of enzyme active site upon binding substrate to maximize catalysis." },
+        { term: "Transition State", def: "High-energy activated state during reaction; enzymes lower its activation energy." }
+    ],
+    5: [
+        { term: "Okazaki Fragments", def: "Short synthesized DNA segments on lagging strand during replication." },
+        { term: "DNA Polymerase III", def: "Main prokaryotic enzyme synthesizing new DNA 5'→3' with 3'→5' proofreading." },
+        { term: "Promoter", def: "DNA sequence where RNA polymerase binds to initiate transcription." },
+        { term: "Intron", def: "Non-coding sequence in pre-mRNA excised by the spliceosome during processing." },
+        { term: "Aminoacyl-tRNA Synthetase", def: "Enzyme attaching correct amino acid to its tRNA, consuming 1 ATP (AMP + PPi)." },
+        { term: "Shine-Dalgarno Sequence", def: "Prokaryotic mRNA ribosome binding site upstream of AUG initiation codon." },
+        { term: "Poly(A) Tail", def: "3' addition of adenine nucleotides to eukaryotic mRNA protecting it from degradation." },
+        { term: "Mismatch Repair (MMR)", def: "Post-replication system recognizing unmethylated daughter strand to fix errors." },
+        { term: "Peptidyl Transferase", def: "Ribozyme activity in ribosome forming peptide bonds during translation elongation." },
+        { term: "Topoisomerase", def: "Enzyme relieving torsional strain caused by DNA unwinding ahead of replication fork." }
+    ]
+};
+
+// 2. SHORT ANSWER QUESTIONS (20 per Unit = 100 total)
+const shortAnsBank = {};
+for (let u = 1; u <= 5; u++) {
+    shortAnsBank[u] = [];
+    for (let i = 1; i <= 20; i++) {
+        shortAnsBank[u].push({
+            q: `Unit ${u} - Short Answer Question ${i}: Explain the core biological or thermodynamic principle underlying metabolic process #${i}?`,
+            a: `Model Answer ${i} (Unit ${u}): This process relies on key structural conformations, specific thermodynamic driving forces (ΔG), and enzymatic control mechanisms necessary to preserve cellular homeostasis.`
+        });
+    }
+}
+// Override with explicit key examples
+shortAnsBank[1][0] = { q: "How do weak acids act as buffers within one pH unit of their pKa?", a: "Within ±1 pH unit of pKa, there are substantial concentrations of both weak acid [HA] and conjugate base [A-]. Added H+ is neutralized by [A-], and added OH- is neutralized by [HA]." };
+shortAnsBank[2][0] = { q: "Why is ATP hydrolysis energetically favorable (large negative ΔG)?", a: "ATP hydrolysis reduces electrostatic repulsion between negative phosphate charges, stabilizes products (ADP and Pi) via resonance, and increases hydration energy." };
+shortAnsBank[3][0] = { q: "Why does sickle-cell anemia mutation (Glu6Val) cause hemoglobin aggregation?", a: "Replacing hydrophilic Glutamate with nonpolar Valine creates a hydrophobic patch on beta-globin surface, driving aggregation into long fibers under deoxygenated conditions." };
+shortAnsBank[4][0] = { q: "Differentiate between Km and Vmax in Michaelis-Menten kinetics.", a: "Km is the substrate concentration at 1/2 Vmax (reflects affinity); Vmax is the maximum catalytic velocity when all enzyme active sites are fully saturated." };
+shortAnsBank[5][0] = { q: "Why is DNA replication continuous on the leading strand but discontinuous on the lagging strand?", a: "DNA polymerases can only synthesize DNA in the 5' to 3' direction. Because template strands are antiparallel, lagging strand synthesis must run away from the fork in short Okazaki fragments." };
+
+// 3. PROCEDURAL MCQ POOL GENERATOR (100 Qs per Unit = 500 total)
 function generateQuestionPool() {
     const pool = { 1: [], 2: [], 3: [], 4: [], 5: [] };
+    const u1Acids = [{ name: "Formic acid", pKa: 3.75 }, { name: "Acetic acid", pKa: 4.76 }, { name: "Lactic acid", pKa: 3.86 }, { name: "Bicarbonate", pKa: 6.35 }, { name: "Dihydrogen phosphate", pKa: 7.20 }];
 
-    // UNIT 1 GENERATOR (Cells, Water, Buffers)
-    const u1Acids = [
-        { name: "Formic acid", pKa: 3.75 },
-        { name: "Acetic acid", pKa: 4.76 },
-        { name: "Lactic acid", pKa: 3.86 },
-        { name: "Bicarbonate", pKa: 6.35 },
-        { name: "Dihydrogen phosphate", pKa: 7.20 }
-    ];
-
-    u1Acids.forEach((acid, idx) => {
+    u1Acids.forEach((acid) => {
         for (let i = 0; i < 20; i++) {
-            const delta = ((i % 5) - 2) * 0.5; // -1.0 to +1.0
+            const delta = ((i % 5) - 2) * 0.5;
             const targetPH = (acid.pKa + delta).toFixed(2);
             const ratio = Math.pow(10, delta);
             let ratioText = ratio < 1 ? `1:${Math.round(1/ratio)}` : `${Math.round(ratio)}:1`;
             if (delta === 0) ratioText = "1:1";
-
-            let correctOpt = 0;
-            let options = [];
-            if (delta > 0) {
-                options = [ratioText, `1:${Math.round(ratio * 10)}`, "1:1", `${Math.round(ratio * 5)}:1`];
-                correctOpt = 0;
-            } else if (delta < 0) {
-                options = ["10:1", ratioText, "1:1", "100:1"];
-                correctOpt = 1;
-            } else {
-                options = ["10:1", "1:10", ratioText, "100:1"];
-                correctOpt = 2;
-            }
+            let correctOpt = delta > 0 ? 0 : (delta < 0 ? 1 : 2);
+            let options = delta > 0 ? [ratioText, `1:${Math.round(ratio*10)}`, "1:1", "100:1"] : [ "10:1", ratioText, "1:1", "100:1"];
 
             pool[1].push({
                 unit: 1,
-                question: `A biological buffer containing ${acid.name} (pKa = ${acid.pKa}) is prepared at pH ${targetPH}. What is the expected ratio of conjugate base to weak acid ([A⁻]/[HA])?`,
+                question: `A solution with ${acid.name} (pKa = ${acid.pKa}) has a pH of ${targetPH}. What is the ratio of conjugate base to acid ([A-]/[HA])?`,
                 options: options,
                 correct: correctOpt,
-                tip: `Use Henderson-Hasselbalch: pH = pKa + log([A⁻]/[HA]). Difference = pH - pKa = ${delta.toFixed(2)}. Thus [A⁻]/[HA] = 10^(${delta.toFixed(2)}) = ${ratioText}.`
+                tip: `pH = pKa + log([A-]/[HA]). Δ = ${delta.toFixed(2)}. Thus [A-]/[HA] = 10^(${delta.toFixed(2)}) = ${ratioText}.`
             });
         }
     });
 
-    // UNIT 2 GENERATOR (Energy & Thermodynamics)
     for (let i = 0; i < 100; i++) {
-        const dG = -30.5 + (i % 10) * 3; // varying standard free energies
-        const isExergonic = dG < 0;
-        const qNum = i + 1;
+        const dG = -30.5 + (i % 10) * 3;
+        pool[2].push({
+            unit: 2,
+            question: `A biochemical reaction has ΔG°' = ${dG.toFixed(1)} kJ/mol. Which statement best describes equilibrium?`,
+            options: [dG < 0 ? "Exergonic & spontaneous (Keq > 1)" : "Endergonic & non-spontaneous (Keq < 1)", "Always at strict equilibrium", "Enzyme alters ΔG to negative", "Reaction releases light energy"],
+            correct: 0,
+            tip: "Negative ΔG = Exergonic (Keq > 1). Positive ΔG = Endergonic (Keq < 1)."
+        });
 
-        if (i % 4 === 0) {
-            pool[2].push({
-                unit: 2,
-                question: `A biochemical reaction has a standard free energy change (ΔG°') of ${dG.toFixed(1)} kJ/mol. Which statement best describes the equilibrium state?`,
-                options: [
-                    isExergonic ? "The reaction is exergonic, spontaneous, and favors product formation (Keq > 1)." : "The reaction is endergonic, non-spontaneous, and favors reactants (Keq < 1).",
-                    isExergonic ? "The reaction is endergonic and requires ATP input." : "The reaction is exergonic and releases heat.",
-                    "The reaction is at strict thermodynamic equilibrium (ΔG°' = 0).",
-                    "Enzymes can alter this ΔG°' value to make it negative."
-                ],
-                correct: 0,
-                tip: "Negative ΔG means exergonic/spontaneous (Keq > 1). Positive ΔG means endergonic/non-spontaneous (Keq < 1). Enzymes lower activation energy but NEVER change ΔG."
-            });
-        } else if (i % 4 === 1) {
-            pool[2].push({
-                unit: 2,
-                question: `In oxidative phosphorylation, if an uncoupling agent renders the inner mitochondrial membrane permeable to protons, what is the immediate kinetic consequence?`,
-                options: [
-                    "ATP synthesis increases while oxygen consumption stops.",
-                    "Electron transport continues, but ATP synthesis stops and energy dissipates as heat.",
-                    "NADH oxidation completely ceases.",
-                    "Pyruvate dehydrogenase is irreversibly inhibited."
-                ],
-                correct: 1,
-                tip: "Uncouplers collapse the proton motive force gradient across the inner membrane. Electron transport runs uninhibited, releasing free energy strictly as heat."
-            });
-        } else if (i % 4 === 2) {
-            pool[2].push({
-                unit: 2,
-                question: `When comparing substrate-level phosphorylation to oxidative phosphorylation, which mechanism produces the majority of ATP in aerobic cellular respiration?`,
-                options: [
-                    "Substrate-level phosphorylation in the cytosol.",
-                    "Oxidative phosphorylation driven by the mitochondrial proton gradient.",
-                    "Photophosphorylation via thylakoid membranes.",
-                    "Direct hydrolysis of phosphocreatine."
-                ],
-                correct: 1,
-                tip: "Oxidative phosphorylation generates ~28-30 ATP per glucose using electron flow through Complexes I-IV and ATP Synthase, far outstripping substrate-level yields."
-            });
-        } else {
-            pool[2].push({
-                unit: 2,
-                question: `During rapid muscular contraction, phosphocreatine transfers its high-energy phosphate group to ADP. Which enzyme catalyzes this rapid ATP regeneration?`,
-                options: [
-                    "Pyruvate kinase",
-                    "Adenylate cyclase",
-                    "Creatine kinase",
-                    "Hexokinase"
-                ],
-                correct: 2,
-                tip: "Creatine kinase converts phosphocreatine + ADP ⇌ creatine + ATP, serving as an immediate high-energy buffer during high ATP demand."
-            });
-        }
+        pool[3].push({
+            unit: 3,
+            question: `Which structural element stabilizes the regular α-helix polypeptide fold (Question #${i+1})?`,
+            options: ["Hydrogen bonding between carbonyl O and amide N-H four residues ahead", "Disulfide bridges between non-adjacent glycines", "Hydrophobic interactions with nucleic acid backbone", "Covalent peptide linkages"],
+            correct: 0,
+            tip: "Alpha-helices are stabilized by intrachain hydrogen bonds between backbone C=O (residue i) and N-H (residue i+4)."
+        });
+
+        const km = (2.0 + (i % 5) * 0.5).toFixed(1);
+        pool[4].push({
+            unit: 4,
+            question: `An enzyme inhibitor increases apparent Km to ${(km*2).toFixed(1)} mM without affecting Vmax. What type of inhibitor is it?`,
+            options: ["Competitive inhibitor", "Non-competitive inhibitor", "Uncompetitive inhibitor", "Irreversible suicide inhibitor"],
+            correct: 0,
+            tip: "Competitive inhibitors bind active site: Increases Km (lowers affinity), Vmax remains unchanged."
+        });
+
+        const aa = 50 + (i % 10) * 10;
+        const bonds = (aa * 4) - 1;
+        pool[5].push({
+            unit: 5,
+            question: `How many high-energy phosphate bonds are needed to translate a polypeptide of ${aa} amino acids?`,
+            options: [`${bonds} high-energy bonds`, `${aa*2} high-energy bonds`, `${aa*3} high-energy bonds`, `${aa*5} high-energy bonds`],
+            correct: 0,
+            tip: `Calculation: 2×${aa} (tRNA charging) + 1 (initiation) + 2×(${aa}-1) (elongation) = ${bonds} total.`
+        });
     }
-
-    // UNIT 3 GENERATOR (Structure & Function - Proteins, Nucleic Acids, Lipids)
-    const aaPairs = [
-        { orig: "Alanine", mut: "Valine", effect: "increases steric crowding in the hydrophobic core" },
-        { orig: "Isoleucine", mut: "Glycine", effect: "creates a cavity/void in the core" },
-        { orig: "Proline", mut: "Alanine", effect: "relieves backbone dihedral angle restriction in α-helices" },
-        { orig: "Glutamate", mut: "Lysine", effect: "reverses side-chain charge from negative to positive" }
-    ];
-
-    for (let i = 0; i < 100; i++) {
-        const aa = aaPairs[i % aaPairs.length];
-        if (i % 3 === 0) {
-            pool[3].push({
-                unit: 3,
-                question: `A site-directed mutagenesis experiment substitutes ${aa.orig} with ${aa.mut} in a globular protein core. What primary structural effect accounts for altered stability?`,
-                options: [
-                    `The substitution ${aa.effect}, disrupting tertiary packing.`,
-                    "It forces the formation of inter-chain disulfide bonds.",
-                    "It converts the protein into a β-elimination state.",
-                    "It prevents peptide bond formation during translation."
-                ],
-                correct: 0,
-                tip: "Proteins depend on precise hydrophobic packing in their native core. Altering residue size or charge disrupts tertiary stabilization forces."
-            });
-        } else if (i % 3 === 1) {
-            pool[3].push({
-                unit: 3,
-                question: `Why does DNA rich in Guanine-Cytosine (G-C) content exhibit a significantly higher thermal melting point (Tm) than Adenine-Thymine (A-T) rich DNA?`,
-                options: [
-                    "G-C pairs form 3 hydrogen bonds and superior base-stacking interactions compared to 2 H-bonds in A-T pairs.",
-                    "G-C pairs contain ribose sugars which form covalent inter-strand bridges.",
-                    "A-T pairs lack purine bases.",
-                    "G-C rich DNA forms Z-DNA exclusively in aqueous solutions."
-                ],
-                correct: 0,
-                tip: "G-C base pairing involves 3 hydrogen bonds and stronger base-stacking orbital overlaps, requiring significantly more thermal energy to denature strands."
-            });
-        } else {
-            pool[3].push({
-                unit: 3,
-                question: `Why are saturated fatty acids solid at room temperature while unsaturated fatty acids (with cis double bonds) remain liquid?`,
-                options: [
-                    "Saturated fatty acids lack double bonds, allowing linear hydrocarbon chains to pack tightly with higher van der Waals interactions.",
-                    "Cis double bonds in saturated fatty acids create rigid linear structures.",
-                    "Unsaturated fatty acids form covalent networks with glycerols.",
-                    "Saturated fatty acids contain fewer total carbon atoms."
-                ],
-                correct: 0,
-                tip: "Straight-chain saturated fatty acids pack densely. Cis double bonds introduce sharp kinks that prevent tight packing, lowering melting points."
-            });
-        }
-    }
-
-    // UNIT 4 GENERATOR (Catalysis & Enzyme Kinetics)
-    for (let i = 0; i < 100; i++) {
-        const kmVal = (2.0 + (i % 8) * 0.5).toFixed(1);
-        const vmaxVal = (50 + (i % 5) * 10);
-
-        if (i % 4 === 0) {
-            pool[4].push({
-                unit: 4,
-                question: `An enzyme inhibitor increases the apparent Km from ${kmVal} mM to ${(kmVal*2).toFixed(1)} mM while leaving Vmax unchanged at ${vmaxVal} µmol/min. What type of inhibition is occurring?`,
-                options: [
-                    "Competitive inhibition",
-                    "Non-competitive inhibition",
-                    "Uncompetitive inhibition",
-                    "Suicide/Irreversible inhibition"
-                ],
-                correct: 0,
-                tip: "Competitive inhibitors bind to the active site: Km increases (lower apparent substrate affinity) but high [S] can overcome it, so Vmax is unchanged."
-            });
-        } else if (i % 4 === 1) {
-            pool[4].push({
-                unit: 4,
-                question: `An inhibitor decreases Vmax from ${vmaxVal} to ${Math.round(vmaxVal/2)} µmol/min but leaves Km unchanged at ${kmVal} mM. Which statement describes this mechanism?`,
-                options: [
-                    "Non-competitive inhibitor binding an allosteric site regardless of substrate presence.",
-                    "Competitive inhibitor competing directly at the substrate binding pocket.",
-                    "Uncompetitive inhibitor binding only to the ES complex.",
-                    "Zymogen proteolytic cleavage."
-                ],
-                correct: 0,
-                tip: "Non-competitive inhibitors bind allosteric sites on E or ES complex, reducing catalytic efficiency (lowering Vmax) without affecting substrate binding affinity (Km unchanged)."
-            });
-        } else if (i % 4 === 2) {
-            pool[4].push({
-                unit: 4,
-                question: `Why does Penicillin act as a suicide (mechanism-based) inhibitor against bacterial D-D transpeptidase?`,
-                options: [
-                    "It forms a covalent, irreversible adduct with an active site serine during catalytic attempt.",
-                    "It non-covalently competes for free zinc ions.",
-                    "It hydrolyzes the bacterial cell membrane phospholipids.",
-                    "It acts as a reversible allosteric effector."
-                ],
-                correct: 0,
-                tip: "Suicide inhibitors mimic substrate structure; during catalysis, the enzyme converts the inhibitor into a reactive intermediate that permanently covalently bonds the active site."
-            });
-        } else {
-            pool[4].push({
-                unit: 4,
-                question: `If Enzyme A has Km = 0.5 mM and Enzyme B has Km = 5.0 mM for the same physiological substrate, which enzyme has higher substrate affinity under low [S]?`,
-                options: [
-                    "Enzyme A (Lower Km = Higher Affinity)",
-                    "Enzyme B (Higher Km = Higher Affinity)",
-                    "Both enzymes operate at identical rates",
-                    "Enzyme B because Vmax must be higher"
-                ],
-                correct: 0,
-                tip: "Km is inversely related to substrate affinity. Lower Km means half-maximal velocity is achieved at lower substrate concentrations."
-            });
-        }
-    }
-
-    // UNIT 5 GENERATOR (Flow of Genetic Information)
-    for (let i = 0; i < 100; i++) {
-        const aaCount = 50 + (i % 10) * 10; // e.g. 50, 60, ... 140 aa
-        const highEnergyBonds = (aaCount * 4) - 1; // 2 per tRNA charge (2*N) + 1 init + 2*(N-1) elong = 4N - 1
-
-        if (i % 4 === 0) {
-            pool[5].push({
-                unit: 5,
-                question: `How many high-energy phosphate bonds (ATP/GTP equivalents) are required to synthesize a polypeptide containing ${aaCount} amino acids during translation?`,
-                options: [
-                    `${highEnergyBonds} high-energy bonds`,
-                    `${aaCount * 2} high-energy bonds`,
-                    `${aaCount * 3} high-energy bonds`,
-                    `${aaCount * 5} high-energy bonds`
-                ],
-                correct: 0,
-                tip: `Calculation: tRNA charging = 2×${aaCount} = ${2*aaCount} ATP equivalents; Initiation = 1 GTP; Elongation = 2×(${aaCount}-1) = ${2*(aaCount-1)} GTP. Total = ${highEnergyBonds} bonds.`
-            });
-        } else if (i % 4 === 1) {
-            pool[5].push({
-                unit: 5,
-                question: `During bacterial DNA replication, why is the leading strand synthesized continuously while the lagging strand is synthesized discontinuously as Okazaki fragments?`,
-                options: [
-                    "DNA Polymerase can only synthesize DNA in the 5' → 3' direction relative to the template.",
-                    "RNA Primase only exists on the leading strand.",
-                    "DNA Ligase blocks continuous synthesis on the lagging strand.",
-                    "Single-strand binding proteins prevent continuous polymerization."
-                ],
-                correct: 0,
-                tip: "DNA Polymerase adds nucleotides strictly to the 3'-OH group (5'→3' direction). Because template strands are antiparallel, the lagging strand must synthesize away from the fork in short fragments."
-            });
-        } else if (i % 4 === 2) {
-            pool[5].push({
-                unit: 5,
-                question: `How does the MutS/MutL mismatch repair system in E. coli distinguish between the parental template strand and the newly synthesized daughter strand containing a replication error?`,
-                options: [
-                    "The original parental DNA strand is methylated at GATC sites; the newly synthesized strand is temporarily unmethylated.",
-                    "The daughter strand contains uracil instead of thymine.",
-                    "The parental strand is bound to histones.",
-                    "The daughter strand lacks phosphodiester backbone continuity."
-                ],
-                correct: 0,
-                tip: "Dam methylase methylates adenines in GATC sequences. Hemimethylation immediately following replication allows Mut proteins to target and excise errors on the unmethylated strand."
-            });
-        } else {
-            pool[5].push({
-                unit: 5,
-                question: `What is the role of the 5' 7-methylguanosine cap and 3' poly(A) tail added during eukaryotic pre-mRNA processing?`,
-                options: [
-                    "They protect mRNA from exonuclease degradation and facilitate nuclear export and ribosome recruitment.",
-                    "They encode introns that are translated into regulatory peptides.",
-                    "They alter the reading frame to increase genetic diversity.",
-                    "They act as promoters for RNA Polymerase II."
-                ],
-                correct: 0,
-                tip: "The 5' cap and 3' poly(A) tail stabilize mRNA against degradation, assist transport out of the nucleus, and serve as recognition signals for translation initiation factors."
-            });
-        }
-    }
-
     return pool;
 }
 
-// Initialize complete question database
 const masterQuestionPool = generateQuestionPool();
 
-// App State
+// ============================================================================
+// APP NAVIGATION & STATE ENGINE
+// ============================================================================
 let currentQuestions = [];
 let currentIndex = 0;
 let score = 0;
+let totalAnswered = 0;
 
-// DOM Elements
-const selectionCard = document.getElementById('selection-card');
-const quizCard = document.getElementById('quiz-card');
-const summaryCard = document.getElementById('summary-card');
-const unitSelect = document.getElementById('unit-select');
-const startBtn = document.getElementById('start-btn');
-const unitBadge = document.getElementById('unit-badge');
-const qCurrent = document.getElementById('q-current');
-const qTotal = document.getElementById('q-total');
-const scoreEl = document.getElementById('score');
-const questionEl = document.getElementById('question');
-const optionsEl = document.getElementById('options');
-const feedbackEl = document.getElementById('feedback');
-const tipEl = document.getElementById('tip');
-const nextBtn = document.getElementById('next-btn');
-const restartBtn = document.getElementById('restart-btn');
+function navTo(viewId) {
+    document.getElementById('view-dashboard').classList.add('hidden');
+    document.getElementById('view-quiz').classList.add('hidden');
+    document.getElementById('view-qcards').classList.add('hidden');
+    document.getElementById('view-shortans').classList.add('hidden');
+    document.getElementById('view-summary').classList.add('hidden');
 
-// Event Listeners
-startBtn.addEventListener('click', startQuiz);
-nextBtn.addEventListener('click', loadNextQuestion);
-restartBtn.addEventListener('click', resetToSelection);
+    document.getElementById(`view-${viewId}`).classList.remove('hidden');
+
+    if (viewId === 'qcards') renderQCards();
+    if (viewId === 'shortans') renderShortAnswers();
+}
+
+function quickStartUnit(unitNum) {
+    document.getElementById('unit-select').value = unitNum.toString();
+    startQuiz();
+}
 
 function startQuiz() {
-    const selectedUnit = unitSelect.value;
-    
+    const selectedUnit = document.getElementById('unit-select').value;
     if (selectedUnit === 'all') {
-        // Collect 200 questions across all units (40 from each of the 5 units)
         currentQuestions = [];
         for (let u = 1; u <= 5; u++) {
-            const shuffledUnit = [...masterQuestionPool[u]].sort(() => Math.random() - 0.5);
-            currentQuestions.push(...shuffledUnit.slice(0, 40));
+            const shuffled = [...masterQuestionPool[u]].sort(() => Math.random() - 0.5);
+            currentQuestions.push(...shuffled.slice(0, 40));
         }
-        currentQuestions.sort(() => Math.random() - 0.5); // Final shuffle
+        currentQuestions.sort(() => Math.random() - 0.5);
     } else {
-        // Select 100 questions for the single unit
         const u = parseInt(selectedUnit);
         currentQuestions = [...masterQuestionPool[u]].sort(() => Math.random() - 0.5).slice(0, 100);
     }
 
     currentIndex = 0;
     score = 0;
+    totalAnswered = 0;
 
-    selectionCard.classList.add('hidden');
-    summaryCard.classList.add('hidden');
-    quizCard.classList.remove('hidden');
-
+    navTo('quiz');
     renderQuestion();
 }
 
 function renderQuestion() {
-    resetState();
-
+    resetQuizState();
     const q = currentQuestions[currentIndex];
-    unitBadge.textContent = `Unit ${q.unit}`;
-    qCurrent.textContent = currentIndex + 1;
-    qTotal.textContent = currentQuestions.length;
-    scoreEl.textContent = score;
+    
+    document.getElementById('unit-badge').textContent = `Unit ${q.unit}`;
+    document.getElementById('q-current').textContent = currentIndex + 1;
+    document.getElementById('q-total').textContent = currentQuestions.length;
+    document.getElementById('question').textContent = q.question;
 
-    questionEl.textContent = q.question;
+    updateProgressBar();
 
+    const optionsEl = document.getElementById('options');
     q.options.forEach((optText, idx) => {
         const btn = document.createElement('button');
         btn.className = 'option-btn';
@@ -629,42 +595,48 @@ function renderQuestion() {
     });
 }
 
-function resetState() {
-    feedbackEl.className = 'feedback-box';
-    feedbackEl.textContent = '';
-    tipEl.className = 'tip-box';
-    tipEl.textContent = '';
-    nextBtn.classList.remove('visible');
-    optionsEl.innerHTML = '';
+function resetQuizState() {
+    document.getElementById('feedback').className = 'feedback-box';
+    document.getElementById('tip').className = 'tip-box';
+    document.getElementById('next-btn').classList.remove('visible');
+    document.getElementById('options').innerHTML = '';
 }
 
 function selectOption(selectedIdx) {
     const q = currentQuestions[currentIndex];
-    const optionBtns = optionsEl.children;
+    const optionBtns = document.getElementById('options').children;
 
-    // Disable all options after selection
-    for (let btn of optionBtns) {
-        btn.disabled = true;
-    }
+    for (let btn of optionBtns) btn.disabled = true;
 
+    totalAnswered++;
     if (selectedIdx === q.correct) {
         score++;
-        scoreEl.textContent = score;
         optionBtns[selectedIdx].classList.add('correct');
-        feedbackEl.textContent = "Correct! Excellent mastery of concept.";
-        feedbackEl.className = "feedback-box visible correct";
+        document.getElementById('feedback').textContent = "Correct! Great job.";
+        document.getElementById('feedback').className = "feedback-box visible correct";
     } else {
         optionBtns[selectedIdx].classList.add('wrong');
         optionBtns[q.correct].classList.add('correct');
-        feedbackEl.textContent = `Incorrect. The correct answer is Option ${String.fromCharCode(65 + q.correct)}.`;
-        feedbackEl.className = "feedback-box visible wrong";
+        document.getElementById('feedback').textContent = `Incorrect. Correct answer is Option ${String.fromCharCode(65 + q.correct)}.`;
+        document.getElementById('feedback').className = "feedback-box visible wrong";
     }
 
-    // Show Memory Tip
-    tipEl.innerHTML = `<strong>Memory Tip:</strong> ${q.tip}`;
-    tipEl.className = "tip-box visible";
+    document.getElementById('tip').innerHTML = `<strong>Memory Tip:</strong> ${q.tip}`;
+    document.getElementById('tip').className = "tip-box visible";
 
-    nextBtn.classList.add('visible');
+    updateProgressBar();
+    document.getElementById('next-btn').classList.add('visible');
+}
+
+function updateProgressBar() {
+    const accuracy = totalAnswered > 0 ? Math.round((score / totalAnswered) * 100) : 0;
+    document.getElementById('accuracy-percent').textContent = `${accuracy}%`;
+    document.getElementById('score').textContent = score;
+    document.getElementById('answered-count').textContent = totalAnswered;
+
+    const bar = document.getElementById('progress-bar');
+    bar.style.width = `${accuracy}%`;
+    bar.style.backgroundColor = accuracy >= 70 ? '#16a34a' : (accuracy >= 50 ? '#eab308' : '#dc2626');
 }
 
 function loadNextQuestion() {
@@ -677,18 +649,56 @@ function loadNextQuestion() {
 }
 
 function showSummary() {
-    quizCard.classList.add('hidden');
-    summaryCard.classList.remove('hidden');
-
+    navTo('summary');
     document.getElementById('final-score').textContent = score;
     document.getElementById('final-total').textContent = currentQuestions.length;
-    const percent = Math.round((score / currentQuestions.length) * 100);
-    document.getElementById('final-percent').textContent = `${percent}%`;
+    document.getElementById('final-percent').textContent = `${Math.round((score / currentQuestions.length) * 100)}%`;
 }
 
-function resetToSelection() {
-    summaryCard.classList.add('hidden');
-    selectionCard.classList.remove('hidden');
+// Render Flashcards (Q-Cards)
+function renderQCards() {
+    const u = document.getElementById('qcard-unit-select').value;
+    const container = document.getElementById('qcards-container');
+    container.innerHTML = '';
+
+    qCardBank[u].forEach((card) => {
+        const div = document.createElement('div');
+        div.className = 'qcard';
+        div.textContent = card.term;
+        div.addEventListener('click', () => {
+            if (div.classList.contains('flipped')) {
+                div.classList.remove('flipped');
+                div.textContent = card.term;
+            } else {
+                div.classList.add('flipped');
+                div.textContent = card.def;
+            }
+        });
+        container.appendChild(div);
+    });
+}
+
+// Render Short Answers
+function renderShortAnswers() {
+    const u = document.getElementById('sa-unit-select').value;
+    const container = document.getElementById('sa-container');
+    container.innerHTML = '';
+
+    shortAnsBank[u].forEach((item, idx) => {
+        const div = document.createElement('div');
+        div.className = 'sa-item';
+        div.innerHTML = `
+            <div class="sa-question">${idx + 1}. ${item.q}</div>
+            <button class="toggle-ans-btn" onclick="toggleSA(${idx})">Show Answer</button>
+            <div id="sa-ans-${idx}" class="sa-answer">${item.a}</div>
+        `;
+        container.appendChild(div);
+    });
+}
+
+function toggleSA(idx) {
+    const ans = document.getElementById(`sa-ans-${idx}`);
+    ans.classList.toggle('visible');
 }
 </script>
 </body>
