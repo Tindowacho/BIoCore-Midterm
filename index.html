@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biochemistry Revision Platform</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --correct-bg: #dcfce7;
+            --correct-border: #16a34a;
+            --correct-text: #14532d;
+            --wrong-bg: #fee2e2;
+            --wrong-border: #dc2626;
+            --wrong-text: #7f1d1d;
+            --tip-bg: #eff6ff;
+            --tip-border: #3b82f6;
+            --tip-text: #1e40af;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.5;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        h1 {
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            margin-bottom: 20px;
+        }
+
+        .control-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        label {
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        select, button {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+            font-size: 1rem;
+            background-color: #fff;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: var(--primary);
+            color: white;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .question-text {
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-btn {
+            text-align: left;
+            background-color: #f1f5f9;
+            color: var(--text-main);
+            border: 1px solid #e2e8f0;
+            padding: 14px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: normal;
+            transition: all 0.2s;
+        }
+
+        .option-btn:hover:not([disabled]) {
+            background-color: #e2e8f0;
+            border-color: #cbd5e1;
+        }
+
+        .option-btn.correct {
+            background-color: var(--correct-bg) !important;
+            border-color: var(--correct-border) !important;
+            color: var(--correct-text) !important;
+            font-weight: 600;
+        }
+
+        .option-btn.wrong {
+            background-color: var(--wrong-bg) !important;
+            border-color: var(--wrong-border) !important;
+            color: var(--wrong-text) !important;
+        }
+
+        .feedback-box {
+            margin-top: 20px;
+            padding: 16px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .feedback-box.visible {
+            display: block;
+        }
+
+        .feedback-box.correct {
+            background-color: var(--correct-bg);
+            border: 1px solid var(--correct-border);
+            color: var(--correct-text);
+        }
+
+        .feedback-box.wrong {
+            background-color: var(--wrong-bg);
+            border: 1px solid var(--wrong-border);
+            color: var(--wrong-text);
+        }
+
+        .tip-box {
+            margin-top: 15px;
+            padding: 14px;
+            background-color: var(--tip-bg);
+            border-left: 4px solid var(--tip-border);
+            color: var(--tip-text);
+            border-radius: 0 8px 8px 0;
+            display: none;
+            font-size: 0.95rem;
+        }
+
+        .tip-box.visible {
+            display: block;
+        }
+
+        .action-btn {
+            margin-top: 20px;
+            display: none;
+        }
+
+        .action-btn.visible {
+            display: block;
+        }
+
+        .badge {
+            background-color: #e0e7ff;
+            color: #3730a3;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Biochemistry Revision Platform</h1>
+        <p class="subtitle">Medium-to-Hard Multiple Choice Questions with Instant Feedback & Memory Tips</p>
+    </header>
+
+    <!-- Selection Panel -->
+    <div id="selection-card" class="card">
+        <div class="control-panel">
+            <div>
+                <label for="unit-select">Select Unit / Scope:</label>
+                <select id="unit-select">
+                    <option value="all">Entire Curriculum (All 5 Units)</option>
+                    <option value="1">Unit 1: Cells, Water and Buffers</option>
+                    <option value="2">Unit 2: Energy & Thermodynamics</option>
+                    <option value="3">Unit 3: Structure and Function</option>
+                    <option value="4">Unit 4: Catalysis & Enzyme Kinetics</option>
+                    <option value="5">Unit 5: Flow of Genetic Information</option>
+                </select>
+            </div>
+            <button id="start-btn">Start Practice Session</button>
+        </div>
+    </div>
+
+    <!-- Quiz Engine Card -->
+    <div id="quiz-card" class="card hidden">
+        <div class="stats-bar">
+            <span id="unit-badge" class="badge">Unit 1</span>
+            <span>Question <span id="q-current">1</span> of <span id="q-total">10</span></span>
+            <span>Score: <span id="score">0</span></span>
+        </div>
+
+        <div id="question" class="question-text">Loading question...</div>
+
+        <div id="options" class="options-grid">
+            <!-- Options rendered via JS -->
+        </div>
+
+        <div id="feedback" class="feedback-box"></div>
+        <div id="tip" class="tip-box"></div>
+
+        <button id="next-btn" class="action-btn">Next Question</button>
+    </div>
+
+    <!-- Summary Card -->
+    <div id="summary-card" class="card hidden">
+        <h2>Practice Complete!</h2>
+        <p>You completed the selected unit/curriculum practice module.</p>
+        <p style="font-size: 1.25rem; font-weight: bold;">Your Score: <span id="final-score">0</span> / <span id="final-total">0</span> (<span id="final-percent">0%</span>)</p>
+        <button id="restart-btn">Try Another Quiz</button>
+    </div>
+</div>
+
+<script>
+// Question Bank targeting Medium-Hard Difficulty across all 5 Units
+const questionBank = [
+    // UNIT 1: Cells, Water and Buffers
+    {
+        unit: 1,
+        question: "A solution containing a weak acid with a pKa of 4.76 is adjusted to pH 5.76. What is the ratio of conjugate base to weak acid ([A-]/[HA]) in this solution?",
+        options: ["1:10", "1:1", "10:1", "100:1"],
+        correct: 2,
+        tip: "Remember the Henderson-Hasselbalch equation: pH = pKa + log([A-]/[HA]). When pH is 1 unit ABOVE pKa, log([A-]/[HA]) = 1, meaning [A-]/[HA] = 10:1."
+    },
+    {
+        unit: 1,
+        question: "Why is ammonia (NH3) a less effective biological solvent than water (H2O), despite both being able to form hydrogen bonds?",
+        options: [
+            "Ammonia cannot dissolve polar molecules",
+            "Ammonia forms weaker hydrogen bonds and has a lower heat of vaporization",
+            "Ammonia is entirely nonpolar in liquid state",
+            "Ammonia prevents acid-base reactions from occurring"
+        ],
+        correct: 1,
+        tip: "Water's stronger H-bonds provide superior solvent capacity and high heat of vaporization, stabilizing cell temperatures better than ammonia."
+    },
+    {
+        unit: 1,
+        question: "Organelle isolation reveals an organelle that metabolizes fatty acids and sugar breakdown products to produce ATP. Where does this occur?",
+        options: ["Cytoplasm", "Lysosome", "Golgi apparatus", "Mitochondria"],
+        correct: 3,
+        tip: "Glycolysis breaks down sugars in the cytoplasm, but fatty acid oxidation and cellular respiration for ATP generation occur in the Mitochondria."
+    },
+
+    // UNIT 2: Energy & Thermodynamics
+    {
+        unit: 2,
+        question: "If a biochemical reaction has a positive standard free-energy change (+ΔG), how can a cell force this reaction to proceed spontaneously in the forward direction?",
+        options: [
+            "Increase the concentration of products relative to reactants",
+            "Couple it to a highly exergonic reaction like ATP hydrolysis",
+            "Add an enzyme to decrease the ΔG",
+            "Lower the temperature to zero"
+        ],
+        correct: 1,
+        tip: "Enzymes cannot change ΔG. To make an endergonic (+ΔG) reaction favorable, cells couple it with an exergonic (-ΔG) reaction so the combined ΔG is negative."
+    },
+    {
+        unit: 2,
+        question: "If electron transport in the mitochondria becomes uncoupled from ATP synthesis while NADH oxidation continues, what physiological outcome is expected?",
+        options: [
+            "ATP synthesis increases dramatically",
+            "Oxygen consumption completely stops",
+            "Energy is released as heat, raising body temperature",
+            "Gluconeogenesis is completely inhibited"
+        ],
+        correct: 2,
+        tip: "Uncoupling dissipates the proton gradient without synthesizing ATP; the dissipated energy is lost as heat (e.g., thermogenesis in brown fat)."
+    },
+
+    // UNIT 3: Structure and Function
+    {
+        unit: 3,
+        question: "A point mutation replaces an internal Ile residue with Gly (Ile → Gly) in a globular protein core, causing loss of activity. A secondary mutation replaces an adjacent Ala with Val (Ala → Val), restoring activity. What explains this?",
+        options: [
+            "Glycine added hydrophobic bulk while Valine decreased it",
+            "Ile→Gly created a cavity (under-packing); Ala→Val restored hydrophobic volume and packing",
+            "Glycine formed a disulfide bond with Valine",
+            "Ala→Val converted the protein into an alpha-keratin"
+        ],
+        correct: 1,
+        tip: "Core packing matters: Replacing a large side chain (Ile) with a small one (Gly) creates a void. Compensating with a larger side chain nearby (Ala→Val) restores core density."
+    },
+    {
+        unit: 3,
+        question: "Which structural property explains why G-C rich DNA requires a higher melting temperature (Tm) to denature than A-T rich DNA?",
+        options: [
+            "G-C pairs form 3 hydrogen bonds and stronger base-stacking interactions",
+            "A-T pairs contain purines while G-C pairs do not",
+            "G-C pairs contain ribose sugars instead of deoxyribose",
+            "A-T pairs form covalent bonds between strands"
+        ],
+        correct: 0,
+        tip: "G-C base pairs form 3 hydrogen bonds (versus 2 in A-T pairs), resulting in greater thermal stability and a higher melting point."
+    },
+
+    // UNIT 4: Catalysis & Enzyme Kinetics
+    {
+        unit: 4,
+        question: "In the presence of a competitive inhibitor, how are the kinetic parameters Km and Vmax affected on a Michaelis-Menten plot?",
+        options: [
+            "Km decreases, Vmax decreases",
+            "Km increases, Vmax remains unchanged",
+            "Km remains unchanged, Vmax decreases",
+            "Km decreases, Vmax remains unchanged"
+        ],
+        correct: 1,
+        tip: "Competitive inhibitors compete with substrate for the active site, increasing the apparent Km (lowering affinity). High substrate concentrations can overcome this, leaving Vmax unchanged."
+    },
+    {
+        unit: 4,
+        question: "Why does malonate act as a competitive inhibitor of succinate dehydrogenase?",
+        options: [
+            "It covalently modifies the enzyme's allosteric site",
+            "It is a structural analogue of succinate that binds the active site but cannot undergo oxidation",
+            "It cleaves the enzyme into inactive apoenzymes",
+            "It reduces FAD to FADH2 directly"
+        ],
+        correct: 1,
+        tip: "Structural analogues resemble the true substrate and occupy the active site, blocking access without undergoing the chemical conversion."
+    },
+
+    // UNIT 5: Flow of Genetic Information
+    {
+        unit: 5,
+        question: "How many high-energy phosphate bonds (from ATP/GTP) are consumed to synthesize a 100-amino acid polypeptide during translation?",
+        options: ["100", "200", "399", "500"],
+        correct: 2,
+        tip: "Charging 100 tRNAs consumes 200 high-energy bonds (100 ATP → 100 AMP + 200 Pi equivalents), 1 for initiation, and 198 (2 GTP per peptide bond x 99) for elongation = 399 total."
+    },
+    {
+        unit: 5,
+        question: "Why does the presence of an RNA primer during DNA replication improve overall fidelity (accuracy)?",
+        options: [
+            "RNA primers bind irreversibly to prevent mutations",
+            "The initial nucleotides added are error-prone; using temporary RNA allows removal and replacement by proofreading DNA polymerase",
+            "RNA polymerase has higher proofreading activity than DNA polymerase",
+            "RNA primers prevent topoisomerase from unwinding DNA"
+        ],
+        correct: 1,
+        tip: "Initiation nucleotides carry higher error rates. Marking the starting segment as RNA guarantees it will later be excised, replaced with DNA, and checked for fidelity."
+    }
+];
+
+// App State
+let currentQuestions = [];
+let currentIndex = 0;
+let score = 0;
+
+// DOM Elements
+const selectionCard = document.getElementById('selection-card');
+const quizCard = document.getElementById('quiz-card');
+const summaryCard = document.getElementById('summary-card');
+const unitSelect = document.getElementById('unit-select');
+const startBtn = document.getElementById('start-btn');
+const unitBadge = document.getElementById('unit-badge');
+const qCurrent = document.getElementById('q-current');
+const qTotal = document.getElementById('q-total');
+const scoreEl = document.getElementById('score');
+const questionEl = document.getElementById('question');
+const optionsEl = document.getElementById('options');
+const feedbackEl = document.getElementById('feedback');
+const tipEl = document.getElementById('tip');
+const nextBtn = document.getElementById('next-btn');
+const restartBtn = document.getElementById('restart-btn');
+
+// Event Listeners
+startBtn.addEventListener('click', startQuiz);
+nextBtn.addEventListener('click', loadNextQuestion);
+restartBtn.addEventListener('click', resetToSelection);
+
+function startQuiz() {
+    const selectedUnit = unitSelect.value;
+    if (selectedUnit === 'all') {
+        currentQuestions = [...questionBank];
+    } else {
+        currentQuestions = questionBank.filter(q => q.unit === parseInt(selectedUnit));
+    }
+
+    // Shuffle questions
+    currentQuestions.sort(() => Math.random() - 0.5);
+
+    currentIndex = 0;
+    score = 0;
+
+    selectionCard.classList.add('hidden');
+    summaryCard.classList.add('hidden');
+    quizCard.classList.remove('hidden');
+
+    renderQuestion();
+}
+
+function renderQuestion() {
+    resetState();
+
+    const q = currentQuestions[currentIndex];
+    unitBadge.textContent = `Unit ${q.unit}`;
+    qCurrent.textContent = currentIndex + 1;
+    qTotal.textContent = currentQuestions.length;
+    scoreEl.textContent = score;
+
+    questionEl.textContent = q.question;
+
+    q.options.forEach((optText, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.textContent = `${String.fromCharCode(65 + idx)}. ${optText}`;
+        btn.addEventListener('click', () => selectOption(idx));
+        optionsEl.appendChild(btn);
+    });
+}
+
+function resetState() {
+    feedbackEl.className = 'feedback-box';
+    feedbackEl.textContent = '';
+    tipEl.className = 'tip-box';
+    tipEl.textContent = '';
+    nextBtn.classList.remove('visible');
+    optionsEl.innerHTML = '';
+}
+
+function selectOption(selectedIdx) {
+    const q = currentQuestions[currentIndex];
+    const optionBtns = optionsEl.children;
+
+    // Disable all options after selection
+    for (let btn of optionBtns) {
+        btn.disabled = true;
+    }
+
+    if (selectedIdx === q.correct) {
+        score++;
+        scoreEl.textContent = score;
+        optionBtns[selectedIdx].classList.add('correct');
+        feedbackEl.textContent = "Correct! Great job.";
+        feedbackEl.className = "feedback-box visible correct";
+    } else {
+        optionBtns[selectedIdx].classList.add('wrong');
+        optionBtns[q.correct].classList.add('correct');
+        feedbackEl.textContent = `Incorrect. The correct answer is Option ${String.fromCharCode(65 + q.correct)}.`;
+        feedbackEl.className = "feedback-box visible wrong";
+    }
+
+    // Show Memory Tip
+    tipEl.innerHTML = `<strong>Memory Tip:</strong> ${q.tip}`;
+    tipEl.className = "tip-box visible";
+
+    nextBtn.classList.add('visible');
+}
+
+function loadNextQuestion() {
+    currentIndex++;
+    if (currentIndex < currentQuestions.length) {
+        renderQuestion();
+    } else {
+        showSummary();
+    }
+}
+
+function showSummary() {
+    quizCard.classList.add('hidden');
+    summaryCard.classList.remove('hidden');
+
+    document.getElementById('final-score').textContent = score;
+    document.getElementById('final-total').textContent = currentQuestions.length;
+    const percent = Math.round((score / currentQuestions.length) * 100);
+    document.getElementById('final-percent').textContent = `${percent}%`;
+}
+
+function resetToSelection() {
+    summaryCard.classList.add('hidden');
+    selectionCard.classList.remove('hidden');
+}
+</script>
+</body>
+</html>
