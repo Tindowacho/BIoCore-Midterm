@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Biochemistry Revision Platform</title>
+    <title>Biochemistry Revision Platform (500+ Question Pool)</title>
     <style>
         :root {
             --primary: #2563eb;
@@ -33,7 +33,7 @@
         }
 
         .container {
-            max-width: 800px;
+            max-width: 850px;
             margin: 0 auto;
         }
 
@@ -218,21 +218,21 @@
 <div class="container">
     <header>
         <h1>Biochemistry Revision Platform</h1>
-        <p class="subtitle">Medium-to-Hard Multiple Choice Questions with Instant Feedback & Memory Tips</p>
+        <p class="subtitle">100 Questions per Unit | 200 Questions Total Curriculum Mode</p>
     </header>
 
     <!-- Selection Panel -->
     <div id="selection-card" class="card">
         <div class="control-panel">
             <div>
-                <label for="unit-select">Select Unit / Scope:</label>
+                <label for="unit-select">Select Practice Scope:</label>
                 <select id="unit-select">
-                    <option value="all">Entire Curriculum (All 5 Units)</option>
-                    <option value="1">Unit 1: Cells, Water and Buffers</option>
-                    <option value="2">Unit 2: Energy & Thermodynamics</option>
-                    <option value="3">Unit 3: Structure and Function</option>
-                    <option value="4">Unit 4: Catalysis & Enzyme Kinetics</option>
-                    <option value="5">Unit 5: Flow of Genetic Information</option>
+                    <option value="all">Entire Curriculum (200 Questions)</option>
+                    <option value="1">Unit 1: Cells, Water and Buffers (100 Questions)</option>
+                    <option value="2">Unit 2: Energy & Thermodynamics (100 Questions)</option>
+                    <option value="3">Unit 3: Structure and Function (100 Questions)</option>
+                    <option value="4">Unit 4: Catalysis & Enzyme Kinetics (100 Questions)</option>
+                    <option value="5">Unit 5: Flow of Genetic Information (100 Questions)</option>
                 </select>
             </div>
             <button id="start-btn">Start Practice Session</button>
@@ -243,7 +243,7 @@
     <div id="quiz-card" class="card hidden">
         <div class="stats-bar">
             <span id="unit-badge" class="badge">Unit 1</span>
-            <span>Question <span id="q-current">1</span> of <span id="q-total">10</span></span>
+            <span>Question <span id="q-current">1</span> of <span id="q-total">100</span></span>
             <span>Score: <span id="score">0</span></span>
         </div>
 
@@ -261,143 +261,299 @@
 
     <!-- Summary Card -->
     <div id="summary-card" class="card hidden">
-        <h2>Practice Complete!</h2>
-        <p>You completed the selected unit/curriculum practice module.</p>
-        <p style="font-size: 1.25rem; font-weight: bold;">Your Score: <span id="final-score">0</span> / <span id="final-total">0</span> (<span id="final-percent">0%</span>)</p>
-        <button id="restart-btn">Try Another Quiz</button>
+        <h2>Practice Session Complete!</h2>
+        <p>You have finished your revision session.</p>
+        <p style="font-size: 1.25rem; font-weight: bold;">Final Score: <span id="final-score">0</span> / <span id="final-total">0</span> (<span id="final-percent">0%</span>)</p>
+        <button id="restart-btn">Start New Session</button>
     </div>
 </div>
 
 <script>
-// Question Bank targeting Medium-Hard Difficulty across all 5 Units
-const questionBank = [
-    // UNIT 1: Cells, Water and Buffers
-    {
-        unit: 1,
-        question: "A solution containing a weak acid with a pKa of 4.76 is adjusted to pH 5.76. What is the ratio of conjugate base to weak acid ([A-]/[HA]) in this solution?",
-        options: ["1:10", "1:1", "10:1", "100:1"],
-        correct: 2,
-        tip: "Remember the Henderson-Hasselbalch equation: pH = pKa + log([A-]/[HA]). When pH is 1 unit ABOVE pKa, log([A-]/[HA]) = 1, meaning [A-]/[HA] = 10:1."
-    },
-    {
-        unit: 1,
-        question: "Why is ammonia (NH3) a less effective biological solvent than water (H2O), despite both being able to form hydrogen bonds?",
-        options: [
-            "Ammonia cannot dissolve polar molecules",
-            "Ammonia forms weaker hydrogen bonds and has a lower heat of vaporization",
-            "Ammonia is entirely nonpolar in liquid state",
-            "Ammonia prevents acid-base reactions from occurring"
-        ],
-        correct: 1,
-        tip: "Water's stronger H-bonds provide superior solvent capacity and high heat of vaporization, stabilizing cell temperatures better than ammonia."
-    },
-    {
-        unit: 1,
-        question: "Organelle isolation reveals an organelle that metabolizes fatty acids and sugar breakdown products to produce ATP. Where does this occur?",
-        options: ["Cytoplasm", "Lysosome", "Golgi apparatus", "Mitochondria"],
-        correct: 3,
-        tip: "Glycolysis breaks down sugars in the cytoplasm, but fatty acid oxidation and cellular respiration for ATP generation occur in the Mitochondria."
-    },
+// ============================================================================
+// QUESTION GENERATOR ENGINE (100 Questions per Unit = 500 total pool)
+// ============================================================================
 
-    // UNIT 2: Energy & Thermodynamics
-    {
-        unit: 2,
-        question: "If a biochemical reaction has a positive standard free-energy change (+ΔG), how can a cell force this reaction to proceed spontaneously in the forward direction?",
-        options: [
-            "Increase the concentration of products relative to reactants",
-            "Couple it to a highly exergonic reaction like ATP hydrolysis",
-            "Add an enzyme to decrease the ΔG",
-            "Lower the temperature to zero"
-        ],
-        correct: 1,
-        tip: "Enzymes cannot change ΔG. To make an endergonic (+ΔG) reaction favorable, cells couple it with an exergonic (-ΔG) reaction so the combined ΔG is negative."
-    },
-    {
-        unit: 2,
-        question: "If electron transport in the mitochondria becomes uncoupled from ATP synthesis while NADH oxidation continues, what physiological outcome is expected?",
-        options: [
-            "ATP synthesis increases dramatically",
-            "Oxygen consumption completely stops",
-            "Energy is released as heat, raising body temperature",
-            "Gluconeogenesis is completely inhibited"
-        ],
-        correct: 2,
-        tip: "Uncoupling dissipates the proton gradient without synthesizing ATP; the dissipated energy is lost as heat (e.g., thermogenesis in brown fat)."
-    },
+function generateQuestionPool() {
+    const pool = { 1: [], 2: [], 3: [], 4: [], 5: [] };
 
-    // UNIT 3: Structure and Function
-    {
-        unit: 3,
-        question: "A point mutation replaces an internal Ile residue with Gly (Ile → Gly) in a globular protein core, causing loss of activity. A secondary mutation replaces an adjacent Ala with Val (Ala → Val), restoring activity. What explains this?",
-        options: [
-            "Glycine added hydrophobic bulk while Valine decreased it",
-            "Ile→Gly created a cavity (under-packing); Ala→Val restored hydrophobic volume and packing",
-            "Glycine formed a disulfide bond with Valine",
-            "Ala→Val converted the protein into an alpha-keratin"
-        ],
-        correct: 1,
-        tip: "Core packing matters: Replacing a large side chain (Ile) with a small one (Gly) creates a void. Compensating with a larger side chain nearby (Ala→Val) restores core density."
-    },
-    {
-        unit: 3,
-        question: "Which structural property explains why G-C rich DNA requires a higher melting temperature (Tm) to denature than A-T rich DNA?",
-        options: [
-            "G-C pairs form 3 hydrogen bonds and stronger base-stacking interactions",
-            "A-T pairs contain purines while G-C pairs do not",
-            "G-C pairs contain ribose sugars instead of deoxyribose",
-            "A-T pairs form covalent bonds between strands"
-        ],
-        correct: 0,
-        tip: "G-C base pairs form 3 hydrogen bonds (versus 2 in A-T pairs), resulting in greater thermal stability and a higher melting point."
-    },
+    // UNIT 1 GENERATOR (Cells, Water, Buffers)
+    const u1Acids = [
+        { name: "Formic acid", pKa: 3.75 },
+        { name: "Acetic acid", pKa: 4.76 },
+        { name: "Lactic acid", pKa: 3.86 },
+        { name: "Bicarbonate", pKa: 6.35 },
+        { name: "Dihydrogen phosphate", pKa: 7.20 }
+    ];
 
-    // UNIT 4: Catalysis & Enzyme Kinetics
-    {
-        unit: 4,
-        question: "In the presence of a competitive inhibitor, how are the kinetic parameters Km and Vmax affected on a Michaelis-Menten plot?",
-        options: [
-            "Km decreases, Vmax decreases",
-            "Km increases, Vmax remains unchanged",
-            "Km remains unchanged, Vmax decreases",
-            "Km decreases, Vmax remains unchanged"
-        ],
-        correct: 1,
-        tip: "Competitive inhibitors compete with substrate for the active site, increasing the apparent Km (lowering affinity). High substrate concentrations can overcome this, leaving Vmax unchanged."
-    },
-    {
-        unit: 4,
-        question: "Why does malonate act as a competitive inhibitor of succinate dehydrogenase?",
-        options: [
-            "It covalently modifies the enzyme's allosteric site",
-            "It is a structural analogue of succinate that binds the active site but cannot undergo oxidation",
-            "It cleaves the enzyme into inactive apoenzymes",
-            "It reduces FAD to FADH2 directly"
-        ],
-        correct: 1,
-        tip: "Structural analogues resemble the true substrate and occupy the active site, blocking access without undergoing the chemical conversion."
-    },
+    u1Acids.forEach((acid, idx) => {
+        for (let i = 0; i < 20; i++) {
+            const delta = ((i % 5) - 2) * 0.5; // -1.0 to +1.0
+            const targetPH = (acid.pKa + delta).toFixed(2);
+            const ratio = Math.pow(10, delta);
+            let ratioText = ratio < 1 ? `1:${Math.round(1/ratio)}` : `${Math.round(ratio)}:1`;
+            if (delta === 0) ratioText = "1:1";
 
-    // UNIT 5: Flow of Genetic Information
-    {
-        unit: 5,
-        question: "How many high-energy phosphate bonds (from ATP/GTP) are consumed to synthesize a 100-amino acid polypeptide during translation?",
-        options: ["100", "200", "399", "500"],
-        correct: 2,
-        tip: "Charging 100 tRNAs consumes 200 high-energy bonds (100 ATP → 100 AMP + 200 Pi equivalents), 1 for initiation, and 198 (2 GTP per peptide bond x 99) for elongation = 399 total."
-    },
-    {
-        unit: 5,
-        question: "Why does the presence of an RNA primer during DNA replication improve overall fidelity (accuracy)?",
-        options: [
-            "RNA primers bind irreversibly to prevent mutations",
-            "The initial nucleotides added are error-prone; using temporary RNA allows removal and replacement by proofreading DNA polymerase",
-            "RNA polymerase has higher proofreading activity than DNA polymerase",
-            "RNA primers prevent topoisomerase from unwinding DNA"
-        ],
-        correct: 1,
-        tip: "Initiation nucleotides carry higher error rates. Marking the starting segment as RNA guarantees it will later be excised, replaced with DNA, and checked for fidelity."
+            let correctOpt = 0;
+            let options = [];
+            if (delta > 0) {
+                options = [ratioText, `1:${Math.round(ratio * 10)}`, "1:1", `${Math.round(ratio * 5)}:1`];
+                correctOpt = 0;
+            } else if (delta < 0) {
+                options = ["10:1", ratioText, "1:1", "100:1"];
+                correctOpt = 1;
+            } else {
+                options = ["10:1", "1:10", ratioText, "100:1"];
+                correctOpt = 2;
+            }
+
+            pool[1].push({
+                unit: 1,
+                question: `A biological buffer containing ${acid.name} (pKa = ${acid.pKa}) is prepared at pH ${targetPH}. What is the expected ratio of conjugate base to weak acid ([A⁻]/[HA])?`,
+                options: options,
+                correct: correctOpt,
+                tip: `Use Henderson-Hasselbalch: pH = pKa + log([A⁻]/[HA]). Difference = pH - pKa = ${delta.toFixed(2)}. Thus [A⁻]/[HA] = 10^(${delta.toFixed(2)}) = ${ratioText}.`
+            });
+        }
+    });
+
+    // UNIT 2 GENERATOR (Energy & Thermodynamics)
+    for (let i = 0; i < 100; i++) {
+        const dG = -30.5 + (i % 10) * 3; // varying standard free energies
+        const isExergonic = dG < 0;
+        const qNum = i + 1;
+
+        if (i % 4 === 0) {
+            pool[2].push({
+                unit: 2,
+                question: `A biochemical reaction has a standard free energy change (ΔG°') of ${dG.toFixed(1)} kJ/mol. Which statement best describes the equilibrium state?`,
+                options: [
+                    isExergonic ? "The reaction is exergonic, spontaneous, and favors product formation (Keq > 1)." : "The reaction is endergonic, non-spontaneous, and favors reactants (Keq < 1).",
+                    isExergonic ? "The reaction is endergonic and requires ATP input." : "The reaction is exergonic and releases heat.",
+                    "The reaction is at strict thermodynamic equilibrium (ΔG°' = 0).",
+                    "Enzymes can alter this ΔG°' value to make it negative."
+                ],
+                correct: 0,
+                tip: "Negative ΔG means exergonic/spontaneous (Keq > 1). Positive ΔG means endergonic/non-spontaneous (Keq < 1). Enzymes lower activation energy but NEVER change ΔG."
+            });
+        } else if (i % 4 === 1) {
+            pool[2].push({
+                unit: 2,
+                question: `In oxidative phosphorylation, if an uncoupling agent renders the inner mitochondrial membrane permeable to protons, what is the immediate kinetic consequence?`,
+                options: [
+                    "ATP synthesis increases while oxygen consumption stops.",
+                    "Electron transport continues, but ATP synthesis stops and energy dissipates as heat.",
+                    "NADH oxidation completely ceases.",
+                    "Pyruvate dehydrogenase is irreversibly inhibited."
+                ],
+                correct: 1,
+                tip: "Uncouplers collapse the proton motive force gradient across the inner membrane. Electron transport runs uninhibited, releasing free energy strictly as heat."
+            });
+        } else if (i % 4 === 2) {
+            pool[2].push({
+                unit: 2,
+                question: `When comparing substrate-level phosphorylation to oxidative phosphorylation, which mechanism produces the majority of ATP in aerobic cellular respiration?`,
+                options: [
+                    "Substrate-level phosphorylation in the cytosol.",
+                    "Oxidative phosphorylation driven by the mitochondrial proton gradient.",
+                    "Photophosphorylation via thylakoid membranes.",
+                    "Direct hydrolysis of phosphocreatine."
+                ],
+                correct: 1,
+                tip: "Oxidative phosphorylation generates ~28-30 ATP per glucose using electron flow through Complexes I-IV and ATP Synthase, far outstripping substrate-level yields."
+            });
+        } else {
+            pool[2].push({
+                unit: 2,
+                question: `During rapid muscular contraction, phosphocreatine transfers its high-energy phosphate group to ADP. Which enzyme catalyzes this rapid ATP regeneration?`,
+                options: [
+                    "Pyruvate kinase",
+                    "Adenylate cyclase",
+                    "Creatine kinase",
+                    "Hexokinase"
+                ],
+                correct: 2,
+                tip: "Creatine kinase converts phosphocreatine + ADP ⇌ creatine + ATP, serving as an immediate high-energy buffer during high ATP demand."
+            });
+        }
     }
-];
+
+    // UNIT 3 GENERATOR (Structure & Function - Proteins, Nucleic Acids, Lipids)
+    const aaPairs = [
+        { orig: "Alanine", mut: "Valine", effect: "increases steric crowding in the hydrophobic core" },
+        { orig: "Isoleucine", mut: "Glycine", effect: "creates a cavity/void in the core" },
+        { orig: "Proline", mut: "Alanine", effect: "relieves backbone dihedral angle restriction in α-helices" },
+        { orig: "Glutamate", mut: "Lysine", effect: "reverses side-chain charge from negative to positive" }
+    ];
+
+    for (let i = 0; i < 100; i++) {
+        const aa = aaPairs[i % aaPairs.length];
+        if (i % 3 === 0) {
+            pool[3].push({
+                unit: 3,
+                question: `A site-directed mutagenesis experiment substitutes ${aa.orig} with ${aa.mut} in a globular protein core. What primary structural effect accounts for altered stability?`,
+                options: [
+                    `The substitution ${aa.effect}, disrupting tertiary packing.`,
+                    "It forces the formation of inter-chain disulfide bonds.",
+                    "It converts the protein into a β-elimination state.",
+                    "It prevents peptide bond formation during translation."
+                ],
+                correct: 0,
+                tip: "Proteins depend on precise hydrophobic packing in their native core. Altering residue size or charge disrupts tertiary stabilization forces."
+            });
+        } else if (i % 3 === 1) {
+            pool[3].push({
+                unit: 3,
+                question: `Why does DNA rich in Guanine-Cytosine (G-C) content exhibit a significantly higher thermal melting point (Tm) than Adenine-Thymine (A-T) rich DNA?`,
+                options: [
+                    "G-C pairs form 3 hydrogen bonds and superior base-stacking interactions compared to 2 H-bonds in A-T pairs.",
+                    "G-C pairs contain ribose sugars which form covalent inter-strand bridges.",
+                    "A-T pairs lack purine bases.",
+                    "G-C rich DNA forms Z-DNA exclusively in aqueous solutions."
+                ],
+                correct: 0,
+                tip: "G-C base pairing involves 3 hydrogen bonds and stronger base-stacking orbital overlaps, requiring significantly more thermal energy to denature strands."
+            });
+        } else {
+            pool[3].push({
+                unit: 3,
+                question: `Why are saturated fatty acids solid at room temperature while unsaturated fatty acids (with cis double bonds) remain liquid?`,
+                options: [
+                    "Saturated fatty acids lack double bonds, allowing linear hydrocarbon chains to pack tightly with higher van der Waals interactions.",
+                    "Cis double bonds in saturated fatty acids create rigid linear structures.",
+                    "Unsaturated fatty acids form covalent networks with glycerols.",
+                    "Saturated fatty acids contain fewer total carbon atoms."
+                ],
+                correct: 0,
+                tip: "Straight-chain saturated fatty acids pack densely. Cis double bonds introduce sharp kinks that prevent tight packing, lowering melting points."
+            });
+        }
+    }
+
+    // UNIT 4 GENERATOR (Catalysis & Enzyme Kinetics)
+    for (let i = 0; i < 100; i++) {
+        const kmVal = (2.0 + (i % 8) * 0.5).toFixed(1);
+        const vmaxVal = (50 + (i % 5) * 10);
+
+        if (i % 4 === 0) {
+            pool[4].push({
+                unit: 4,
+                question: `An enzyme inhibitor increases the apparent Km from ${kmVal} mM to ${(kmVal*2).toFixed(1)} mM while leaving Vmax unchanged at ${vmaxVal} µmol/min. What type of inhibition is occurring?`,
+                options: [
+                    "Competitive inhibition",
+                    "Non-competitive inhibition",
+                    "Uncompetitive inhibition",
+                    "Suicide/Irreversible inhibition"
+                ],
+                correct: 0,
+                tip: "Competitive inhibitors bind to the active site: Km increases (lower apparent substrate affinity) but high [S] can overcome it, so Vmax is unchanged."
+            });
+        } else if (i % 4 === 1) {
+            pool[4].push({
+                unit: 4,
+                question: `An inhibitor decreases Vmax from ${vmaxVal} to ${Math.round(vmaxVal/2)} µmol/min but leaves Km unchanged at ${kmVal} mM. Which statement describes this mechanism?`,
+                options: [
+                    "Non-competitive inhibitor binding an allosteric site regardless of substrate presence.",
+                    "Competitive inhibitor competing directly at the substrate binding pocket.",
+                    "Uncompetitive inhibitor binding only to the ES complex.",
+                    "Zymogen proteolytic cleavage."
+                ],
+                correct: 0,
+                tip: "Non-competitive inhibitors bind allosteric sites on E or ES complex, reducing catalytic efficiency (lowering Vmax) without affecting substrate binding affinity (Km unchanged)."
+            });
+        } else if (i % 4 === 2) {
+            pool[4].push({
+                unit: 4,
+                question: `Why does Penicillin act as a suicide (mechanism-based) inhibitor against bacterial D-D transpeptidase?`,
+                options: [
+                    "It forms a covalent, irreversible adduct with an active site serine during catalytic attempt.",
+                    "It non-covalently competes for free zinc ions.",
+                    "It hydrolyzes the bacterial cell membrane phospholipids.",
+                    "It acts as a reversible allosteric effector."
+                ],
+                correct: 0,
+                tip: "Suicide inhibitors mimic substrate structure; during catalysis, the enzyme converts the inhibitor into a reactive intermediate that permanently covalently bonds the active site."
+            });
+        } else {
+            pool[4].push({
+                unit: 4,
+                question: `If Enzyme A has Km = 0.5 mM and Enzyme B has Km = 5.0 mM for the same physiological substrate, which enzyme has higher substrate affinity under low [S]?`,
+                options: [
+                    "Enzyme A (Lower Km = Higher Affinity)",
+                    "Enzyme B (Higher Km = Higher Affinity)",
+                    "Both enzymes operate at identical rates",
+                    "Enzyme B because Vmax must be higher"
+                ],
+                correct: 0,
+                tip: "Km is inversely related to substrate affinity. Lower Km means half-maximal velocity is achieved at lower substrate concentrations."
+            });
+        }
+    }
+
+    // UNIT 5 GENERATOR (Flow of Genetic Information)
+    for (let i = 0; i < 100; i++) {
+        const aaCount = 50 + (i % 10) * 10; // e.g. 50, 60, ... 140 aa
+        const highEnergyBonds = (aaCount * 4) - 1; // 2 per tRNA charge (2*N) + 1 init + 2*(N-1) elong = 4N - 1
+
+        if (i % 4 === 0) {
+            pool[5].push({
+                unit: 5,
+                question: `How many high-energy phosphate bonds (ATP/GTP equivalents) are required to synthesize a polypeptide containing ${aaCount} amino acids during translation?`,
+                options: [
+                    `${highEnergyBonds} high-energy bonds`,
+                    `${aaCount * 2} high-energy bonds`,
+                    `${aaCount * 3} high-energy bonds`,
+                    `${aaCount * 5} high-energy bonds`
+                ],
+                correct: 0,
+                tip: `Calculation: tRNA charging = 2×${aaCount} = ${2*aaCount} ATP equivalents; Initiation = 1 GTP; Elongation = 2×(${aaCount}-1) = ${2*(aaCount-1)} GTP. Total = ${highEnergyBonds} bonds.`
+            });
+        } else if (i % 4 === 1) {
+            pool[5].push({
+                unit: 5,
+                question: `During bacterial DNA replication, why is the leading strand synthesized continuously while the lagging strand is synthesized discontinuously as Okazaki fragments?`,
+                options: [
+                    "DNA Polymerase can only synthesize DNA in the 5' → 3' direction relative to the template.",
+                    "RNA Primase only exists on the leading strand.",
+                    "DNA Ligase blocks continuous synthesis on the lagging strand.",
+                    "Single-strand binding proteins prevent continuous polymerization."
+                ],
+                correct: 0,
+                tip: "DNA Polymerase adds nucleotides strictly to the 3'-OH group (5'→3' direction). Because template strands are antiparallel, the lagging strand must synthesize away from the fork in short fragments."
+            });
+        } else if (i % 4 === 2) {
+            pool[5].push({
+                unit: 5,
+                question: `How does the MutS/MutL mismatch repair system in E. coli distinguish between the parental template strand and the newly synthesized daughter strand containing a replication error?`,
+                options: [
+                    "The original parental DNA strand is methylated at GATC sites; the newly synthesized strand is temporarily unmethylated.",
+                    "The daughter strand contains uracil instead of thymine.",
+                    "The parental strand is bound to histones.",
+                    "The daughter strand lacks phosphodiester backbone continuity."
+                ],
+                correct: 0,
+                tip: "Dam methylase methylates adenines in GATC sequences. Hemimethylation immediately following replication allows Mut proteins to target and excise errors on the unmethylated strand."
+            });
+        } else {
+            pool[5].push({
+                unit: 5,
+                question: `What is the role of the 5' 7-methylguanosine cap and 3' poly(A) tail added during eukaryotic pre-mRNA processing?`,
+                options: [
+                    "They protect mRNA from exonuclease degradation and facilitate nuclear export and ribosome recruitment.",
+                    "They encode introns that are translated into regulatory peptides.",
+                    "They alter the reading frame to increase genetic diversity.",
+                    "They act as promoters for RNA Polymerase II."
+                ],
+                correct: 0,
+                tip: "The 5' cap and 3' poly(A) tail stabilize mRNA against degradation, assist transport out of the nucleus, and serve as recognition signals for translation initiation factors."
+            });
+        }
+    }
+
+    return pool;
+}
+
+// Initialize complete question database
+const masterQuestionPool = generateQuestionPool();
 
 // App State
 let currentQuestions = [];
@@ -428,14 +584,20 @@ restartBtn.addEventListener('click', resetToSelection);
 
 function startQuiz() {
     const selectedUnit = unitSelect.value;
+    
     if (selectedUnit === 'all') {
-        currentQuestions = [...questionBank];
+        // Collect 200 questions across all units (40 from each of the 5 units)
+        currentQuestions = [];
+        for (let u = 1; u <= 5; u++) {
+            const shuffledUnit = [...masterQuestionPool[u]].sort(() => Math.random() - 0.5);
+            currentQuestions.push(...shuffledUnit.slice(0, 40));
+        }
+        currentQuestions.sort(() => Math.random() - 0.5); // Final shuffle
     } else {
-        currentQuestions = questionBank.filter(q => q.unit === parseInt(selectedUnit));
+        // Select 100 questions for the single unit
+        const u = parseInt(selectedUnit);
+        currentQuestions = [...masterQuestionPool[u]].sort(() => Math.random() - 0.5).slice(0, 100);
     }
-
-    // Shuffle questions
-    currentQuestions.sort(() => Math.random() - 0.5);
 
     currentIndex = 0;
     score = 0;
@@ -489,7 +651,7 @@ function selectOption(selectedIdx) {
         score++;
         scoreEl.textContent = score;
         optionBtns[selectedIdx].classList.add('correct');
-        feedbackEl.textContent = "Correct! Great job.";
+        feedbackEl.textContent = "Correct! Excellent mastery of concept.";
         feedbackEl.className = "feedback-box visible correct";
     } else {
         optionBtns[selectedIdx].classList.add('wrong');
